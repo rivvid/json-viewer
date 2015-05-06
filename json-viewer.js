@@ -5,7 +5,8 @@
     app.directive('jsonViewer', function(){
         return {
             scope: {
-                "data": '=jsonViewer'
+                "data": '=jsonViewer',
+                "startCollapsed": '@startCollapsed'
             },
             link: function(scope, element, attrs){
                 scope.$watch('data', function(nv, ov){
@@ -28,10 +29,10 @@
                             return '<' + type.toUpperCase() + '>' + value +'</'+type.toUpperCase() +'>';
                         }, ' ');
                         
-                        jsonString = jsonString.replace(/{/g, '<div class="json-viewer--group"><div class="json-viewer--bracket json-viewer--start">{</div><ul class="json-viewer--object"><li>');
+                        jsonString = jsonString.replace(/{/g, '<div class="json-viewer--group json-viewer--folded"><div class="json-viewer--bracket json-viewer--start">{</div><ul class="json-viewer--object"><li>');
                         jsonString = jsonString.replace(/}/g, '</li></ul><div class="json-viewer--bracket json-viewer--end">}</div></div>');
 
-                        jsonString = jsonString.replace(/\[/g, '<div class="json-viewer--group"><div class="json-viewer--bracket json-viewer--start">[</div><ul class="json-viewer--object"><li>');
+                        jsonString = jsonString.replace(/\[/g, '<div class="json-viewer--group json-viewer--folded"><div class="json-viewer--bracket json-viewer--start">[</div><ul class="json-viewer--object"><li>');
                         jsonString = jsonString.replace(/\]/g, '</li></ul><div class="json-viewer--bracket json-viewer--end">]</div></div>');
 
                         jsonString = jsonString.replace(/,$/gm, '<span class="json-viewer--comma">,</span></li><li>');
@@ -43,6 +44,8 @@
                         jsonString = jsonString.replace(/"<STRING>([^<]+)<\/STRING>"/g, '<span class="json-viewer--value json-viewer--string">"$1"</span>');
                         jsonString = jsonString.replace(/"<NUMBER>([^<]+)<\/NUMBER>"/g, '<span class="json-viewer--value json-viewer--number">$1</span>');
                         jsonString = jsonString.replace(/"<BOOLEAN>([^<]+)<\/BOOLEAN>"/g, '<span class="json-viewer--value json-viewer--boolean">$1</span>');
+                        
+                        jsonString = jsonString.replace('json-viewer--folded','');
 
                         element[0].innerHTML = jsonString;
                     }
